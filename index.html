@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>300 Day Catholic Bible Reading Plan</title>
+    <meta name="description" content="Complete the Catholic Bible in 300 days with guided daily readings">
+    <meta name="theme-color" content="#1e40af">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="icon-192x192.png">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css?v=20250723-89">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>300 Day Bible Reading Plan</h1>
+            <div class="progress-summary">
+                <span id="currentDay">Day 1</span> of 300
+            </div>
+            <div class="start-date-display">
+                Started: <span id="startDateDisplay">Loading...</span>
+            </div>
+            <div class="completion-date-display">
+                Expected Finish: <span id="completionDateDisplay">Loading...</span>
+            </div>
+        </header>
+        
+        <main>
+            <div class="progress-section">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+                <div class="progress-stats">
+                    <span><span id="completedDays">0</span> completed</span>
+                    <span><span id="remainingDays">300</span> remaining</span>
+                    <span><span id="bufferDays">65</span> buffer days</span>
+                </div>
+            </div>
+            
+            <!-- App Navigation Tabs -->
+            <div class="app-navigation">
+                <button class="nav-tab active" data-section="reading-plan">Reading Plan</button>
+                <button class="nav-tab" data-section="full-plan">Full Plan Overview</button>
+                <button class="nav-tab" data-section="bible-navigation">Bible Navigation</button>
+            </div>
+            
+            <!-- Reading Plan Section -->
+            <div class="app-section active" id="reading-plan-section">
+                <div class="daily-readings">
+                <div class="day-navigation">
+                    <button id="prevDay" class="nav-btn">‹ Previous</button>
+                    <div class="day-info">
+                        <h2 id="dayTitle">Day 1 Readings</h2>
+                        <div class="go-to-day">
+                            <input type="number" id="dayInput" min="1" max="300" placeholder="Day #">
+                            <button id="goToDayBtn" class="nav-btn">Go</button>
+                        </div>
+                    </div>
+                    <button id="nextDay" class="nav-btn">Next ›</button>
+                </div>
+                
+                <div class="readings-container">
+                    <div class="reading-section">
+                        <div class="reading-header">
+                            <div class="reading-title">
+                                <input type="checkbox" id="psalmCheck" class="reading-checkbox">
+                                <h3>Psalm</h3>
+                            </div>
+                            <button id="togglePsalmBtn" class="toggle-btn btn-secondary" data-section="psalm">Show</button>
+                        </div>
+                        <div class="reading-reference" id="psalmRef">Loading...</div>
+                        <div class="reading-text" id="psalmText"></div>
+                    </div>
+                    
+                    <div class="reading-section">
+                        <div class="reading-header">
+                            <div class="reading-title">
+                                <input type="checkbox" id="gospelCheck" class="reading-checkbox">
+                                <h3>Gospel</h3>
+                            </div>
+                            <button id="toggleGospelBtn" class="toggle-btn btn-secondary" data-section="gospel">Show</button>
+                        </div>
+                        <div class="reading-reference" id="gospelRef">Loading...</div>
+                        <div class="reading-text" id="gospelText"></div>
+                    </div>
+                    
+                    <div class="reading-section">
+                        <div class="reading-header">
+                            <div class="reading-title">
+                                <input type="checkbox" id="wisdomCheck" class="reading-checkbox">
+                                <h3>Wisdom</h3>
+                            </div>
+                            <button id="toggleWisdomBtn" class="toggle-btn btn-secondary" data-section="wisdom">Show</button>
+                        </div>
+                        <div class="reading-reference" id="wisdomRef">Loading...</div>
+                        <div class="reading-text" id="wisdomText"></div>
+                    </div>
+                    
+                    <div class="reading-section">
+                        <div class="reading-header">
+                            <div class="reading-title">
+                                <input type="checkbox" id="oldTestamentCheck" class="reading-checkbox">
+                                <h3>Old Testament</h3>
+                            </div>
+                            <button id="toggleOldTestamentBtn" class="toggle-btn btn-secondary" data-section="oldTestament">Show</button>
+                        </div>
+                        <div class="reading-reference" id="oldTestamentRef">Loading...</div>
+                        <div class="reading-text" id="oldTestamentText"></div>
+                    </div>
+                    
+                    <div class="reading-section">
+                        <div class="reading-header">
+                            <div class="reading-title">
+                                <input type="checkbox" id="newTestamentCheck" class="reading-checkbox">
+                                <h3>New Testament</h3>
+                            </div>
+                            <button id="toggleNewTestamentBtn" class="toggle-btn btn-secondary" data-section="newTestament">Show</button>
+                        </div>
+                        <div class="reading-reference" id="newTestamentRef">Loading...</div>
+                        <div class="reading-text" id="newTestamentText"></div>
+                    </div>
+                </div>
+                
+                <div class="reading-actions">
+                    <button id="markCompleteBtn" class="btn btn-primary">Mark Day Complete</button>
+                    <button id="changeStartDateBtn" class="btn btn-secondary">Change Start Date</button>
+                    <button id="resetDataBtn" class="btn btn-danger">Reset All Data</button>
+                </div>
+                
+                <!-- Start Date Modal (hidden by default) -->
+                <div id="startDateModal" class="modal hidden">
+                    <div class="modal-content">
+                        <h3>Change Start Date</h3>
+                        <p>Select your actual reading plan start date:</p>
+                        <div class="modal-form">
+                            <input type="date" id="startDatePicker" class="date-input">
+                            <div class="modal-buttons">
+                                <button id="updateStartDateBtn" class="btn btn-primary">Update</button>
+                                <button id="cancelStartDateBtn" class="btn btn-secondary">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            
+            <!-- Full Plan Overview Section -->
+            <div class="app-section" id="full-plan-section">
+                <div class="full-plan-overview">
+                    <div class="plan-header">
+                        <h2>Reading Plan Overview</h2>
+                        <div class="plan-stats">
+                            <span>300 Days Total • 73 Books • Complete Catholic Canon</span>
+                        </div>
+                    </div>
+                    
+                    <div class="plan-controls">
+                        <div class="filter-controls">
+                            <button class="filter-btn active" data-filter="all">All Days</button>
+                            <button class="filter-btn" data-filter="completed">Completed</button>
+                            <button class="filter-btn" data-filter="remaining">Remaining</button>
+                        </div>
+                        <div class="search-controls">
+                            <input type="text" id="planSearch" placeholder="Search readings..." class="plan-search">
+                        </div>
+                    </div>
+                    
+                    <div class="days-grid" id="daysGrid">
+                        <!-- Days will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bible Navigation Section -->
+            <div class="app-section" id="bible-navigation-section">
+                <div class="bible-navigation">
+                    <div class="navigation-header">
+                        <h2>Bible Navigation</h2>
+                    </div>
+                    <div class="bible-sections">
+                        <!-- Old Testament -->
+                        <div class="testament-section">
+                            <h3 class="testament-title">Old Testament</h3>
+                            <div class="book-categories">
+                                <div class="book-category">
+                                    <h4>Pentateuch</h4>
+                                    <div class="book-list" id="pentateuch-books"></div>
+                                </div>
+                                <div class="book-category">
+                                    <h4>Historical Books</h4>
+                                    <div class="book-list" id="historical-books"></div>
+                                </div>
+                                <div class="book-category">
+                                    <h4>Wisdom Books</h4>
+                                    <div class="book-list" id="wisdom-books"></div>
+                                </div>
+                                <div class="book-category">
+                                    <h4>Major Prophets</h4>
+                                    <div class="book-list" id="major-prophets"></div>
+                                </div>
+                                <div class="book-category">
+                                    <h4>Minor Prophets</h4>
+                                    <div class="book-list" id="minor-prophets"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- New Testament -->
+                        <div class="testament-section">
+                            <h3 class="testament-title">New Testament</h3>
+                            <div class="book-categories">
+                                <div class="book-category">
+                                    <h4>Gospels</h4>
+                                    <div class="book-list" id="gospels"></div>
+                                </div>
+                                <div class="book-category">
+                                    <h4>Epistles</h4>
+                                    <div class="book-list" id="epistles"></div>
+                                </div>
+                                <div class="book-category">
+                                    <h4>Revelation</h4>
+                                    <div class="book-list" id="revelation"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chapter Navigation -->
+                <div class="chapter-navigation hidden" id="chapterNavigation">
+                    <div class="chapter-header">
+                        <h2 id="selectedBookTitle">Book Chapters</h2>
+                        <button class="btn btn-secondary" id="backToBooks">← Books</button>
+                    </div>
+                    <div class="chapter-grid" id="chapterGrid"></div>
+                </div>
+                
+                <!-- Bible Text Display -->
+                <div class="bible-text-display hidden" id="bibleTextDisplay">
+                    <div class="text-header">
+                        <h2 id="currentPassageTitle">Passage</h2>
+                        <div class="chapter-navigation-controls">
+                            <button class="btn btn-secondary" id="backToChapters">← Chapters</button>
+                            <div class="prev-next-buttons">
+                                <button class="btn btn-secondary" id="prevChapter">‹ Previous</button>
+                                <button class="btn btn-secondary" id="nextChapter">Next ›</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bible-text-content" id="bibleTextContent"></div>
+                </div>
+            </div>
+            
+            <div class="quick-stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="streakDays">0</div>
+                    <div class="stat-label">Day Streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="percentComplete">0%</div>
+                    <div class="stat-label">Complete</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="daysAhead">0</div>
+                    <div class="stat-label">Days Ahead</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="daysMissed">0</div>
+                    <div class="stat-label">Days Missed</div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Install PWA Prompt -->
+    <div id="installPrompt" class="install-prompt hidden">
+        <div class="install-content">
+            <p>📱 Install this app for the best reading experience!</p>
+            <div class="install-buttons">
+                <button id="installBtn" class="btn btn-primary">Install App</button>
+                <button id="dismissInstall" class="btn btn-secondary">Later</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="readingPlan.js?v=20250723-66"></script>
+    <script src="app.js?v=20250723-87"></script>
+</body>
+</html>
