@@ -345,7 +345,7 @@ header h1 {
 }
 
 .reading-text p {
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.25rem;
 }
 
 .reading-text .verse-number {
@@ -907,7 +907,7 @@ div[data-chapter-type="addition"],
 }
 
 .bible-text-content p {
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.25rem;
 }
 
 /* Responsive Design for Bible Navigation */

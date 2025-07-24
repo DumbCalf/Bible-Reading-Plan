@@ -2,7 +2,7 @@
   "name": "300 Day Catholic Bible Reading Plan",
   "short_name": "Bible 300",
   "description": "Complete the Catholic Bible in 300 days with guided daily readings from Psalm, Gospel, Wisdom, Old Testament, and New Testament",
-  "start_url": "/",
+  "start_url": "/Bible-Reading-Plan/",
   "display": "standalone",
   "background_color": "#1e40af",
   "theme_color": "#1e40af",
@@ -12,68 +12,10 @@
   "dir": "ltr",
   "icons": [
     {
-      "src": "icon-72x72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "icon-96x96.png", 
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "icon-128x128.png",
-      "sizes": "128x128", 
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "icon-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "icon-152x152.png",
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
       "src": "icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable any"
-    },
-    {
-      "src": "icon-384x384.png",
-      "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable any"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "screenshot-wide.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Daily Bible reading interface"
-    },
-    {
-      "src": "screenshot-narrow.png", 
-      "sizes": "750x1334",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Mobile Bible reading view"
     }
   ],
   "shortcuts": [
@@ -81,7 +23,7 @@
       "name": "Today's Reading",
       "short_name": "Today",
       "description": "View today's Bible readings",
-      "url": "/?day=today",
+      "url": "/Bible-Reading-Plan/?day=today",
       "icons": [
         {
           "src": "icon-192x192.png",
@@ -93,7 +35,7 @@
       "name": "Reading Plan",
       "short_name": "Plan", 
       "description": "View the complete 300-day plan",
-      "url": "/?view=plan",
+      "url": "/Bible-Reading-Plan/?view=plan",
       "icons": [
         {
           "src": "icon-192x192.png",
@@ -104,7 +46,7 @@
   ],
   "related_applications": [],
   "prefer_related_applications": false,
-  "scope": "/",
+  "scope": "/Bible-Reading-Plan/",
   "id": "300-day-catholic-bible-reading",
   "launch_handler": {
     "client_mode": "navigate-existing"
