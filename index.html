@@ -14,7 +14,7 @@
     <link rel="apple-touch-icon" href="icon-192x192.png">
     
     <!-- CSS -->
-    <link rel="stylesheet" href="styles.css?v=20250723-89">
+    <link rel="stylesheet" href="styles.css?v=20250723-91">
 </head>
 <body>
     <div class="container">
@@ -130,6 +130,7 @@
                 <div class="reading-actions">
                     <button id="markCompleteBtn" class="btn btn-primary">Mark Day Complete</button>
                     <button id="changeStartDateBtn" class="btn btn-secondary">Change Start Date</button>
+                    <button id="notificationSettingsBtn" class="btn btn-secondary">Notification Settings</button>
                     <button id="resetDataBtn" class="btn btn-danger">Reset All Data</button>
                 </div>
                 
@@ -144,6 +145,70 @@
                                 <button id="updateStartDateBtn" class="btn btn-primary">Update</button>
                                 <button id="cancelStartDateBtn" class="btn btn-secondary">Cancel</button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Notification Settings Modal (hidden by default) -->
+                <div id="notificationModal" class="modal hidden">
+                    <div class="modal-content notification-modal">
+                        <h3>Notification Settings</h3>
+                        <p>Set up daily reading reminders for each category:</p>
+                        
+                        <div class="notification-settings">
+                            <div class="notification-enable">
+                                <label class="notification-toggle">
+                                    <input type="checkbox" id="enableNotifications">
+                                    <span>Enable Notifications</span>
+                                </label>
+                            </div>
+                            
+                            <div class="notification-categories">
+                                <div class="category-setting">
+                                    <label class="category-toggle">
+                                        <input type="checkbox" id="psalmNotification">
+                                        <span>Psalm</span>
+                                    </label>
+                                    <input type="time" id="psalmTime" class="time-input" value="06:00">
+                                </div>
+                                
+                                <div class="category-setting">
+                                    <label class="category-toggle">
+                                        <input type="checkbox" id="gospelNotification">
+                                        <span>Gospel</span>
+                                    </label>
+                                    <input type="time" id="gospelTime" class="time-input" value="08:00">
+                                </div>
+                                
+                                <div class="category-setting">
+                                    <label class="category-toggle">
+                                        <input type="checkbox" id="wisdomNotification">
+                                        <span>Wisdom</span>
+                                    </label>
+                                    <input type="time" id="wisdomTime" class="time-input" value="12:00">
+                                </div>
+                                
+                                <div class="category-setting">
+                                    <label class="category-toggle">
+                                        <input type="checkbox" id="oldTestamentNotification">
+                                        <span>Old Testament</span>
+                                    </label>
+                                    <input type="time" id="oldTestamentTime" class="time-input" value="18:00">
+                                </div>
+                                
+                                <div class="category-setting">
+                                    <label class="category-toggle">
+                                        <input type="checkbox" id="newTestamentNotification">
+                                        <span>New Testament</span>
+                                    </label>
+                                    <input type="time" id="newTestamentTime" class="time-input" value="20:00">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-buttons">
+                            <button id="saveNotificationBtn" class="btn btn-primary">Save Settings</button>
+                            <button id="cancelNotificationBtn" class="btn btn-secondary">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -290,6 +355,6 @@
     </div>
     
     <script src="readingPlan.js?v=20250723-66"></script>
-    <script src="app.js?v=20250723-87"></script>
+    <script src="app.js?v=20250723-92"></script>
 </body>
 </html>

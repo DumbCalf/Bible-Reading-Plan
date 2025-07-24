@@ -14,6 +14,23 @@ class BibleReadingApp {
         this.startDate = new Date();
         this.currentBook = null;
         this.currentChapter = null;
+        this.notifications = {
+            enabled: false,
+            times: {
+                psalm: '06:00',
+                gospel: '08:00', 
+                wisdom: '12:00',
+                oldTestament: '18:00',
+                newTestament: '20:00'
+            },
+            categories: {
+                psalm: true,
+                gospel: true,
+                wisdom: true,
+                oldTestament: true,
+                newTestament: true
+            }
+        };
         
         this.initializeApp();
         this.loadProgress();
@@ -21,6 +38,7 @@ class BibleReadingApp {
         this.initializeBibleNavigation();
         this.initializeFullPlanOverview();
         this.initializeStartDatePicker();
+        this.initializeNotifications();
         this.setupEventListeners();
         this.setupPWAInstall();
     }
@@ -98,6 +116,12 @@ class BibleReadingApp {
         if (savedCheckStates) {
             this.readingChecks = JSON.parse(savedCheckStates);
         }
+        
+        // Load notification settings
+        const savedNotifications = localStorage.getItem('notificationSettings');
+        if (savedNotifications) {
+            this.notifications = { ...this.notifications, ...JSON.parse(savedNotifications) };
+        }
     }
 
     saveProgress() {
@@ -105,6 +129,7 @@ class BibleReadingApp {
         localStorage.setItem('currentReadingDay', this.currentDay.toString());
         localStorage.setItem('showBibleText', JSON.stringify(this.showText));
         localStorage.setItem('readingChecks', JSON.stringify(this.readingChecks));
+        localStorage.setItem('notificationSettings', JSON.stringify(this.notifications));
     }
 
     displayCurrentDay() {
@@ -707,6 +732,157 @@ class BibleReadingApp {
         });
     }
 
+    async initializeNotifications() {
+        // Check if notifications are supported
+        if (!('Notification' in window)) {
+            console.log('This browser does not support notifications');
+            return;
+        }
+
+        // Check if service worker is supported
+        if (!('serviceWorker' in navigator)) {
+            console.log('This browser does not support service workers');
+            return;
+        }
+
+        // Load existing notification settings
+        this.loadNotificationSettings();
+    }
+
+    async requestNotificationPermission() {
+        try {
+            const permission = await Notification.requestPermission();
+            if (permission === 'granted') {
+                this.notifications.enabled = true;
+                this.saveProgress();
+                this.scheduleAllNotifications();
+                return true;
+            } else {
+                this.notifications.enabled = false;
+                this.saveProgress();
+                return false;
+            }
+        } catch (error) {
+            console.error('Error requesting notification permission:', error);
+            return false;
+        }
+    }
+
+    scheduleAllNotifications() {
+        if (!this.notifications.enabled || Notification.permission !== 'granted') {
+            return;
+        }
+
+        // Clear existing notifications
+        this.clearAllNotifications();
+
+        // Schedule notifications for each enabled category
+        Object.keys(this.notifications.categories).forEach(category => {
+            if (this.notifications.categories[category]) {
+                this.scheduleNotification(category, this.notifications.times[category]);
+            }
+        });
+    }
+
+    scheduleNotification(category, time) {
+        const [hours, minutes] = time.split(':').map(Number);
+        const now = new Date();
+        const scheduledTime = new Date();
+        scheduledTime.setHours(hours, minutes, 0, 0);
+
+        // If time has passed today, schedule for tomorrow
+        if (scheduledTime <= now) {
+            scheduledTime.setDate(scheduledTime.getDate() + 1);
+        }
+
+        const delay = scheduledTime.getTime() - now.getTime();
+
+        // Store timeout ID for clearing later
+        const timeoutId = setTimeout(() => {
+            this.showNotification(category);
+            // Schedule next day's notification
+            this.scheduleNotification(category, time);
+        }, delay);
+
+        // Store timeout ID for clearing
+        if (!this.notificationTimeouts) {
+            this.notificationTimeouts = {};
+        }
+        this.notificationTimeouts[category] = timeoutId;
+    }
+
+    showNotification(category) {
+        if (Notification.permission !== 'granted' || !this.notifications.enabled) {
+            return;
+        }
+
+        const reading = readingPlan[this.currentDay - 1];
+        if (!reading) return;
+
+        const categoryNames = {
+            psalm: 'Psalm',
+            gospel: 'Gospel', 
+            wisdom: 'Wisdom',
+            oldTestament: 'Old Testament',
+            newTestament: 'New Testament'
+        };
+
+        const reference = reading[category];
+        if (!reference) return;
+
+        const notification = new Notification(`Time for ${categoryNames[category]} Reading`, {
+            body: `Day ${this.currentDay}: ${reference}`,
+            icon: '/Bible-Reading-Plan/icon-192x192.png',
+            badge: '/Bible-Reading-Plan/icon-192x192.png',
+            tag: `bible-reading-${category}`,
+            requireInteraction: false,
+            silent: false
+        });
+
+        notification.onclick = () => {
+            window.focus();
+            notification.close();
+            // Navigate to reading plan if not already there
+            if (window.location.pathname !== '/Bible-Reading-Plan/' && window.location.pathname !== '/Bible-Reading-Plan/index.html') {
+                window.location.href = '/Bible-Reading-Plan/';
+            }
+        };
+
+        // Auto-close after 10 seconds
+        setTimeout(() => {
+            notification.close();
+        }, 10000);
+    }
+
+    clearAllNotifications() {
+        if (this.notificationTimeouts) {
+            Object.values(this.notificationTimeouts).forEach(timeoutId => {
+                clearTimeout(timeoutId);
+            });
+            this.notificationTimeouts = {};
+        }
+    }
+
+    loadNotificationSettings() {
+        // Already loaded in loadProgress() method
+    }
+
+    updateNotificationTime(category, time) {
+        this.notifications.times[category] = time;
+        this.saveProgress();
+        if (this.notifications.enabled && this.notifications.categories[category]) {
+            this.scheduleAllNotifications(); // Reschedule all
+        }
+    }
+
+    toggleNotificationCategory(category, enabled) {
+        this.notifications.categories[category] = enabled;
+        this.saveProgress();
+        if (this.notifications.enabled) {
+            this.scheduleAllNotifications(); // Reschedule all
+        }
+    }
+
     setupEventListeners() {
         // Navigation
         document.getElementById('prevDay').addEventListener('click', () => {
@@ -834,6 +1010,31 @@ class BibleReadingApp {
             if (e.target.id === 'startDateModal') {
                 this.hideStartDateModal();
             }
+        });
+
+        // Notification settings modal functionality
+        document.getElementById('notificationSettingsBtn').addEventListener('click', () => {
+            this.showNotificationModal();
+        });
+        
+        document.getElementById('saveNotificationBtn').addEventListener('click', () => {
+            this.saveNotificationSettings();
+        });
+        
+        document.getElementById('cancelNotificationBtn').addEventListener('click', () => {
+            this.hideNotificationModal();
+        });
+        
+        // Close notification modal when clicking outside
+        document.getElementById('notificationModal').addEventListener('click', (e) => {
+            if (e.target.id === 'notificationModal') {
+                this.hideNotificationModal();
+            }
+        });
+
+        // Enable/disable notification categories based on main toggle
+        document.getElementById('enableNotifications').addEventListener('change', (e) => {
+            this.toggleNotificationUI(e.target.checked);
         });
 
         // Keyboard shortcuts
@@ -1015,6 +1216,102 @@ class BibleReadingApp {
     hideStartDateModal() {
         const modal = document.getElementById('startDateModal');
         modal.classList.add('hidden');
+    }
+
+    // Method to show notification settings modal
+    showNotificationModal() {
+        const modal = document.getElementById('notificationModal');
+        
+        // Load current settings into the form
+        this.loadNotificationModalSettings();
+        
+        modal.classList.remove('hidden');
+    }
+    
+    // Method to hide notification settings modal
+    hideNotificationModal() {
+        const modal = document.getElementById('notificationModal');
+        modal.classList.add('hidden');
+    }
+    
+    // Method to load settings into notification modal
+    loadNotificationModalSettings() {
+        // Set main enable checkbox
+        document.getElementById('enableNotifications').checked = this.notifications.enabled;
+        
+        // Set category checkboxes and times
+        Object.keys(this.notifications.categories).forEach(category => {
+            const checkbox = document.getElementById(`${category}Notification`);
+            const timeInput = document.getElementById(`${category}Time`);
+            
+            if (checkbox) checkbox.checked = this.notifications.categories[category];
+            if (timeInput) timeInput.value = this.notifications.times[category];
+        });
+        
+        // Update UI state
+        this.toggleNotificationUI(this.notifications.enabled);
+    }
+    
+    // Method to save notification settings from modal
+    async saveNotificationSettings() {
+        const enabledCheckbox = document.getElementById('enableNotifications');
+        const wasEnabled = this.notifications.enabled;
+        const nowEnabled = enabledCheckbox.checked;
+        
+        // If enabling notifications for the first time, request permission
+        if (nowEnabled && !wasEnabled) {
+            const permissionGranted = await this.requestNotificationPermission();
+            if (!permissionGranted) {
+                enabledCheckbox.checked = false;
+                alert('Notification permission is required to enable notifications.');
+                return;
+            }
+        }
+        
+        // Update settings
+        this.notifications.enabled = nowEnabled;
+        
+        // Update category settings
+        Object.keys(this.notifications.categories).forEach(category => {
+            const checkbox = document.getElementById(`${category}Notification`);
+            const timeInput = document.getElementById(`${category}Time`);
+            
+            if (checkbox) this.notifications.categories[category] = checkbox.checked;
+            if (timeInput) this.notifications.times[category] = timeInput.value;
+        });
+        
+        // Save to localStorage
+        this.saveProgress();
+        
+        // Schedule notifications if enabled
+        if (this.notifications.enabled) {
+            this.scheduleAllNotifications();
+        } else {
+            this.clearAllNotifications();
+        }
+        
+        // Hide modal
+        this.hideNotificationModal();
+        
+        // Show confirmation
+        if (nowEnabled) {
+            alert('✅ Notification settings saved! You will receive daily reading reminders.');
+        } else {
+            alert('✅ Notifications disabled.');
+        }
+    }
+    
+    // Method to toggle notification UI elements
+    toggleNotificationUI(enabled) {
+        const categories = ['psalm', 'gospel', 'wisdom', 'oldTestament', 'newTestament'];
+        
+        categories.forEach(category => {
+            const checkbox = document.getElementById(`${category}Notification`);
+            const timeInput = document.getElementById(`${category}Time`);
+            
+            if (checkbox) checkbox.disabled = !enabled;
+            if (timeInput) timeInput.disabled = !enabled;
+        });
     }
     
     // Method to initialize start date display

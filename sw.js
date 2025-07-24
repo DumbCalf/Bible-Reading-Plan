@@ -138,29 +138,39 @@ self.addEventListener('sync', (event) => {
 self.addEventListener('push', (event) => {
     console.log('Service Worker: Push notification received');
     
+    let data = {};
+    if (event.data) {
+        try {
+            data = event.data.json();
+        } catch (e) {
+            data = { title: 'Daily Bible Reading', body: 'Time for your daily Bible reading!' };
+        }
+    }
+    
     const options = {
-        body: 'Time for your daily Bible reading! 📖',
-        icon: '/icon-192x192.png',
-        badge: '/icon-72x72.png',
+        body: data.body || 'Time for your daily Bible reading!',
+        icon: '/Bible-Reading-Plan/icon-192x192.png',
+        badge: '/Bible-Reading-Plan/icon-192x192.png',
         vibrate: [200, 100, 200],
-        tag: 'daily-reminder',
-        requireInteraction: true,
+        tag: data.tag || 'daily-reminder',
+        requireInteraction: false,
+        silent: false,
         actions: [
             {
                 action: 'open',
                 title: 'Read Now',
-                icon: '/icon-192x192.png'
+                icon: '/Bible-Reading-Plan/icon-192x192.png'
             },
             {
                 action: 'later',
                 title: 'Remind Later',
-                icon: '/icon-192x192.png'
+                icon: '/Bible-Reading-Plan/icon-192x192.png'
             }
         ]
     };
 
     event.waitUntil(
-        self.registration.showNotification('Daily Bible Reading', options)
+        self.registration.showNotification(data.title || 'Daily Bible Reading', options)
     );
 });
 
@@ -173,7 +183,7 @@ self.addEventListener('notificationclick', (event) => {
     if (event.action === 'open') {
         // Open the app
         event.waitUntil(
-            clients.openWindow('/')
+            clients.openWindow('/Bible-Reading-Plan/')
         );
     } else if (event.action === 'later') {
         // Schedule another reminder in 2 hours
@@ -182,7 +192,7 @@ self.addEventListener('notificationclick', (event) => {
     } else {
         // Default action - open app
         event.waitUntil(
-            clients.openWindow('/')
+            clients.openWindow('/Bible-Reading-Plan/')
         );
     }
 });

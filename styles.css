@@ -142,6 +142,96 @@ header h1 {
     justify-content: flex-end;
 }
 
+/* Notification Modal Styles */
+.notification-modal {
+    max-width: 500px;
+}
+
+.notification-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.notification-enable {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.notification-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 600;
+    color: var(--primary-blue);
+    cursor: pointer;
+}
+
+.notification-toggle input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--primary-blue);
+    cursor: pointer;
+}
+
+.notification-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.category-setting {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: var(--bg-light);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    transition: border-color 0.2s ease;
+}
+
+.category-setting:hover {
+    border-color: var(--primary-blue);
+}
+
+.category-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    flex: 1;
+}
+
+.category-toggle input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--success);
+    cursor: pointer;
+}
+
+.time-input {
+    padding: 0.5rem;
+    border: 2px solid var(--border);
+    border-radius: 0.375rem;
+    font-size: 0.9rem;
+    width: 80px;
+    transition: border-color 0.2s ease;
+}
+
+.time-input:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+}
+
+.time-input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: var(--border);
+}
+
 /* Progress Section */
 .progress-section {
     background: var(--white);
@@ -956,6 +1046,27 @@ div[data-chapter-type="addition"],
     
     .nav-tab:last-child {
         border-bottom: none;
+    }
+    
+    /* Notification modal responsive */
+    .notification-modal {
+        max-width: 450px;
+        margin: 1rem;
+    }
+    
+    .category-setting {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: stretch;
+    }
+    
+    .category-toggle {
+        justify-content: flex-start;
+    }
+    
+    .time-input {
+        width: 100%;
+        max-width: 120px;
     }
 }
 
