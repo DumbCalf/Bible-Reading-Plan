@@ -2,7 +2,7 @@
   "name": "300 Day Catholic Bible Reading Plan",
   "short_name": "Bible 300",
   "description": "Complete the Catholic Bible in 300 days with guided daily readings from Psalm, Gospel, Wisdom, Old Testament, and New Testament",
-  "start_url": "/Bible-Reading-Plan/",
+  "start_url": "/bible_300/",
   "display": "standalone",
   "background_color": "#1e40af",
   "theme_color": "#1e40af",
@@ -23,7 +23,7 @@
       "name": "Today's Reading",
       "short_name": "Today",
       "description": "View today's Bible readings",
-      "url": "/Bible-Reading-Plan/?day=today",
+      "url": "/bible_300/?day=today",
       "icons": [
         {
           "src": "icon-192x192.png",
@@ -35,7 +35,7 @@
       "name": "Reading Plan",
       "short_name": "Plan", 
       "description": "View the complete 300-day plan",
-      "url": "/Bible-Reading-Plan/?view=plan",
+      "url": "/bible_300/?view=plan",
       "icons": [
         {
           "src": "icon-192x192.png",
@@ -46,7 +46,7 @@
   ],
   "related_applications": [],
   "prefer_related_applications": false,
-  "scope": "/Bible-Reading-Plan/",
+  "scope": "/bible_300/",
   "id": "300-day-catholic-bible-reading",
   "launch_handler": {
     "client_mode": "navigate-existing"

@@ -173,7 +173,7 @@ self.addEventListener('notificationclick', (event) => {
     if (event.action === 'open') {
         // Open the app
         event.waitUntil(
-            clients.openWindow('/')
+            clients.openWindow('/bible_300/')
         );
     } else if (event.action === 'later') {
         // Schedule another reminder in 2 hours
@@ -182,7 +182,7 @@ self.addEventListener('notificationclick', (event) => {
     } else {
         // Default action - open app
         event.waitUntil(
-            clients.openWindow('/')
+            clients.openWindow('/bible_300/')
         );
     }
 });
